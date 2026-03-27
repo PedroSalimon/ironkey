@@ -33,6 +33,8 @@ class IronKeyScreen extends StatefulWidget {
 class _IronKeyScreenState extends State<IronKeyScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
+  int maxCharacters = 12;
+
   @override
   void initState() {
     super.initState();
@@ -63,7 +65,7 @@ class _IronKeyScreenState extends State<IronKeyScreen> {
     final random = Random();
     setState(() {
       _passwordController.text = List.generate(
-        12,
+        maxCharacters,
         (_) => chars[random.nextInt(chars.length)],
       ).join();
     });
@@ -99,22 +101,27 @@ class _IronKeyScreenState extends State<IronKeyScreen> {
                       textAlign: TextAlign.center,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24,
+                      ),
                     ),
                     SizedBox(height: 16),
                     TextField(
                       controller: _passwordController,
+                      maxLength: maxCharacters,
                       decoration: InputDecoration(
                         labelText: "Password",
                         border: OutlineInputBorder(),
                         prefixIcon: Icon(Icons.lock),
                         suffixIcon: _passwordController.text.isNotEmpty
-                          ? IconButton(onPressed: () {
-                            copyPassword(
-                              _passwordController.text);
-                          }, 
-                          icon: Icon(Icons.copy))
-                          : null,
+                            ? IconButton(
+                                onPressed: () {
+                                  copyPassword(_passwordController.text);
+                                },
+                                icon: Icon(Icons.copy),
+                              )
+                            : null,
                       ),
                     ),
                     Text(_passwordController.text),
